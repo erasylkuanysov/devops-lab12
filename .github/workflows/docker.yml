@@ -1,0 +1,32 @@
+name: DevOps Lab 12 Docker Test
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+jobs:
+  docker-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Start containers
+        run: docker compose up -d
+
+      - name: Check containers
+        run: docker compose ps
+
+      - name: Test Prometheus
+        run: |
+          sleep 20
+          curl -f http://localhost:9090/-/ready
+
+      - name: Test Grafana
+        run: curl -f http://localhost:3000/api/health
+
+      - name: Stop containers
+        if: always()
+        run: docker compose down
