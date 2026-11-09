@@ -19,3 +19,11 @@ jobs:
         run: |
           sleep 60
           curl -f http://localhost:9200
+      - name: Send logs
+        run: |
+          echo "ERROR App crashed" | nc -w 3 localhost 5000
+
+      - name: Check logs
+        run: |
+          sleep 15
+          curl -f "http://localhost:9200/logstash-*/_search?q=error"
