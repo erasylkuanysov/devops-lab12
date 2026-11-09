@@ -1,0 +1,21 @@
+name: ELK Stack Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Start ELK
+        run: docker compose -f docker-compose-elk.yml up -d
+
+      - name: Check containers
+        run: docker compose -f docker-compose-elk.yml ps
+
+      - name: Check Elasticsearch
+        run: |
+          sleep 60
+          curl -f http://localhost:9200
